@@ -8,7 +8,10 @@ import argparse
 from sklearn import metrics
 from sklearn import tree
 
-def run(data, fold):
+import config
+import model_dispatcher
+
+def run(data, fold, model):
     
     data_train = data.loc[data['Kfold']!=fold,:].reset_index(drop=True)
     data_val = data.loc[data['Kfold']==fold,:].reset_index(drop=True)
@@ -19,7 +22,7 @@ def run(data, fold):
     X_val = data_val.drop(['class','Kfold'],axis=1)
     y_val = data_val['class']
 
-    clf = tree.DecisionTreeClassifier()
+    clf = model
     clf.fit(X_train,y_train)
     
     preds = clf.predict(X_val)
@@ -31,11 +34,19 @@ def run(data, fold):
 
 if __name__ == "__main__":
 
-    data_train_folds = pd.read_csv('../input/train_folds.csv',header=0)
+    data_train_folds = pd.read_csv(config.TRAINING_FOLDS_FILE,header=0)
     
     parser = argparse.ArgumentParser()
     parser.add_argument("-fold", type=int)
+    parser.add_argument("-model", type=str)
     args = parser.parse_args()
 
-    clf = run(data=data_train_folds, fold=args.fold)
-    joblib.dump(clf,f"../models/df_{args.fold}.bin")
+    if args.model != None:
+        model = model_dispatcher.models[args.model]
+        model_name = args.model
+    else:
+        model = config.MODEL['model']
+        model_name = config.MODEL['model_name']
+    
+    clf = run(data=data_train_folds, fold=args.fold, model=model)
+    joblib.dump(clf,f"{config.MODELS_FOLDER}df_{model_name}_{args.fold}.bin")

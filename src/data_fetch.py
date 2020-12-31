@@ -6,6 +6,7 @@ from sklearn import datasets
 from random import shuffle
 import pandas as pd
 import argparse
+import config
 
 
 def get_data(train_size):
@@ -34,7 +35,7 @@ if __name__ == "__main__":
 
     (train, test) = get_data(train_size = args.train_size)
 
-    train.to_csv(r'../input/train.csv',index=False)
-    test.to_csv(r'../input/test.csv',index=False)
+    train.to_csv(config.TRAINING_FILE,index=False)
+    test.to_csv(config.TEST_FILE,index=False)
 
 
