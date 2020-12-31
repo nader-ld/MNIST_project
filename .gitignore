@@ -1,3 +1,4 @@
 input/train.csv
 input/test.csv
+input/train_folds.csv
 .DS_Store
