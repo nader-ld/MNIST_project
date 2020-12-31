@@ -5,6 +5,7 @@
 import pandas as pd
 from sklearn import model_selection
 import argparse
+import config
 
 
 def create_folds(data_train, n_splits):
@@ -25,8 +26,8 @@ if __name__ == "__main":
     parser.add_argument('-n_splits',type=int)
     args = parser.parse_args()
 
-    data_train = pd.read_csv(r"../input/train.csv",header=0)
+    data_train = pd.read_csv(config.TRAINING_FILE,header=0)
 
     data_train_folds = create_folds(data_train=data_train, n_splits=args.n_splits)
     
-    data_train_folds.to_csv('../input/train_folds.csv',index=False)
+    data_train_folds.to_csv(config.TRAINING_FOLDS_FILE,index=False)
